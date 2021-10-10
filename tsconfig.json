@@ -2,6 +2,13 @@
   "compilerOptions": {
     "lib": ["esnext"],
     "experimentalDecorators": true,
-    "target": "ES2019"
-  }
+    "target": "ES2019",
+    "strict": true,
+    "module": "commonJS",
+    "downlevelIteration": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  },
+  "include": ["./src/**/*"]
 }

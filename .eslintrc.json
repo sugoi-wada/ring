@@ -1,22 +1,18 @@
 {
-	"root": true,
-	"env": {
-		"node": true,
-		"es6": true
-	},
-	"rules": {
-		"no-console": 0,
-		"eqeqeq":"warn",
-		"no-cond-assign": 0,
-		"no-unused-vars": 1,
-		"no-extra-semi": "warn",
-		"semi": "warn"
-	},
-	"extends": ["eslint:recommended", "eslint-config-prettier"],
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"ecmaFeatures": {
-			"experimentalObjectRestSpread": true
-		}
-	}
+  "root": true,
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "semi": ["error", "never", { "beforeStatementContinuationChars": "never" }],
+    "semi-spacing": ["error", { "after": true, "before": false }],
+    "semi-style": ["error", "first"],
+    "no-extra-semi": "error",
+    "no-unexpected-multiline": "error",
+    "no-unreachable": "error",
+    "no-undef": "off"
+  },
+  "extends": ["eslint:recommended", "eslint-config-prettier"],
+  "parser": "@typescript-eslint/parser"
 }

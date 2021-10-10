@@ -337,3 +337,8 @@ out
 .clasp.json
 .clasprc.json
 creds.json
+src/secrets.ts
+
+# build folder
+dist/
+!dist/appscript.json
