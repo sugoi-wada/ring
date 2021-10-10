@@ -332,3 +332,8 @@ ASALocalRun/
 *.DS_Store
 
 out
+
+# Credentials
+.clasp.json
+.clasprc.json
+creds.json

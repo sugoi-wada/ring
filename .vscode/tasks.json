@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clasp login",
+            "type": "shell",
+            "command": "clasp login --creds creds.json",
+            "problemMatcher": []
+        },
+        {
+            "label": "clasp pull",
+            "type": "shell",
+            "command": "clasp pull",
+            "problemMatcher": []
+        },
+        {
+            "label": "clasp push",
+            "type": "shell",
+            "command": "clasp push",
+            "problemMatcher": []
+        },
+        {
+            "label": "clasp logout",
+            "type": "shell",
+            "command": "clasp logout",
+            "problemMatcher": []
+        },
+        {
+            "label": "yarn install",
+            "type": "shell",
+            "command": "yarn install",
+            "problemMatcher": []
+        }
+    ]
+}
