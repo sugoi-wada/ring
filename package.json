@@ -20,6 +20,7 @@
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
     "@types/google-apps-script": "^1.0.37",
+    "@types/google-apps-script-oauth2": "^38.0.0",
     "@typescript-eslint/parser": "^4.33.0",
     "babel-loader": "^8.2.2",
     "eslint": "^8.0.0",
