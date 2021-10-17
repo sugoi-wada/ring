@@ -21,6 +21,13 @@ export const ringFitAdventure = () => {
   const texts = ocrResult.responses.map(
     (res) => res.textAnnotations[0] as OCRFirstText
   )
+  doRecording(
+    texts.map(parseText).map((s) => ({
+      // TODO: use twitter posted date
+      date: Utilities.formatDate(new Date(), "JST", "yyyy/MM/dd"),
+      ...s,
+    }))
+  )
 }
 
 const getTargetTweets = () => {
@@ -54,3 +61,70 @@ const doOCR = (imageUrls: string[]) => {
   }
   return result
 }
+
+type FitnessStat = {
+  /** 肩書き */
+  title?: string
+  /** 名前 */
+  name: string
+  /** 合計活動時間（hh:mm:ss） */
+  totalFitnessDuraion: string
+  /** 合計消費カロリー（kcal） */
+  totalBurnedCalories: number
+  /** 合計走行距離（km） */
+  totalRunnningDistance: number
+}
+
+type FitnessStatWithDate = FitnessStat & {
+  date: string
+}
+
+const doRecording = (stats: FitnessStatWithDate[]) => {
+  if (stats.length < 1) return
+  const spreadSheet = SpreadsheetApp.openById(properties.SHEET_ID)
+  const sheet = spreadSheet.getActiveSheet()
+  const values = stats.map((s) => [
+    s.date,
+    s.title ?? "",
+    s.name,
+    s.totalFitnessDuraion,
+    s.totalBurnedCalories,
+    s.totalRunnningDistance,
+  ])
+  sheet
+    .getRange(sheet.getLastRow() + 1, 1, values.length, values[0].length)
+    .setValues(values)
+}
+
+const parseText = (text: OCRFirstText): FitnessStat => {
+  const texts = text.description.split("\n")
+
+  if (texts.length === 12) {
+    return {
+      title: texts[2],
+      name: texts[3],
+      totalFitnessDuraion: formatDuration(texts[4]),
+      totalBurnedCalories: formatCalorie(texts[6]),
+      totalRunnningDistance: formatDistance(texts[8]),
+    }
+  } else {
+    return {
+      name: texts[2],
+      totalFitnessDuraion: formatDuration(texts[3]),
+      totalBurnedCalories: formatCalorie(texts[5]),
+      totalRunnningDistance: formatDistance(texts[7]),
+    }
+  }
+}
+
+const formatCalorie = (calorie: string) => Number(calorie.replace("kcal", ""))
+const formatDistance = (distance: string) => Number(distance.replace("km", ""))
+
+/** mm分ss秒をhh:mm:ssに変換する */
+const formatDuration = (duration: string) =>
+  "00:" +
+  duration
+    .split(/(分|秒)/)
+    .map((d) => (isNaN(Number(d)) || d === "" ? undefined : d.padStart(2, "0")))
+    .filter(isPresent)
+    .join(":")
