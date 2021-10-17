@@ -1,4 +1,9 @@
-export type Key = "TW_CLIENT_ID" | "TW_CLIENT_SECRET" | "TW_TARGET_IDS" | "CLOUD_VISION_API_KEY"
+export type Key =
+  | "TW_CLIENT_ID"
+  | "TW_CLIENT_SECRET"
+  | "TW_TARGET_IDS"
+  | "CLOUD_VISION_API_KEY"
+  | "SHEET_ID"
 
 /**
  * apps script の script property に値をセットするために使うメソッド
