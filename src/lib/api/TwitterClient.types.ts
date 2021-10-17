@@ -10,6 +10,7 @@ export type TwitterTimeline = {
   data: {
     id: string
     text: string
+    created_at: string
     attachments: {
       media_keys: string[]
     }

@@ -20,7 +20,7 @@ class TwitterClient {
    */
   getTweets(req: TwitterTimelineRequest): TwitterTimelineResponse {
     return this._api.do<TwitterTimeline>(
-      `/2/users/${req.userId}/tweets?expansions=attachments.media_keys&media.fields=url`
+      `/2/users/${req.userId}/tweets?expansions=attachments.media_keys&media.fields=url&tweet.fields=created_at`
     )
   }
 }

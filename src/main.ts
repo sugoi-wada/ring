@@ -4,6 +4,7 @@ import { parseText } from "./parser"
 import { getProperties } from "./properties"
 import { doRecording } from "./recorder"
 import { getTargetTweets } from "./lib/twitter"
+import dayjs from "dayjs"
 
 export const hello = () => {
   console.log(`Hello World！`)
@@ -24,9 +25,8 @@ export const ringFitAdventure = () => {
   )
   doRecording(
     properties.SHEET_ID,
-    texts.map(parseText).map((s) => ({
-      // TODO: use twitter posted date
-      date: Utilities.formatDate(new Date(), "JST", "yyyy/MM/dd"),
+    texts.map(parseText).map((s, i) => ({
+      date: dayjs(tweets[i].created_at).format("YYYY/MM/DD"),
       ...s,
     }))
   )
