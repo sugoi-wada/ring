@@ -1,4 +1,4 @@
-import { hello, twtest } from "./main"
+import { hello, ringFitAdventure } from "./main"
 import { setProperties } from "./properties"
 
 declare const global: {
@@ -7,4 +7,4 @@ declare const global: {
 
 global.hello = hello
 global.setProperties = setProperties
-global.twtest = twtest
+global.ringFitAdventure = ringFitAdventure

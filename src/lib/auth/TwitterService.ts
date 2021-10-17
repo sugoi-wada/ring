@@ -1,4 +1,4 @@
-import { getProperties } from "../properties"
+import { getProperties } from "../../properties"
 
 /**
  * Reset the authorization state, so that it can be re-tested.
