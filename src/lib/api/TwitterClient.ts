@@ -1,4 +1,5 @@
 import { getService } from "../auth/TwitterService"
+import { makeQueryString } from "./helper"
 import {
   ErrorResponse,
   TwitterTimeline,
@@ -19,8 +20,15 @@ class TwitterClient {
    * cf. https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets
    */
   getTweets(req: TwitterTimelineRequest): TwitterTimelineResponse {
+    const query = makeQueryString({
+      expansions: "attachments.media_keys",
+      "media.fields": "url",
+      "tweet.fields": "created_at",
+      ...req.payload,
+    })
+
     return this._api.do<TwitterTimeline>(
-      `/2/users/${req.userId}/tweets?expansions=attachments.media_keys&media.fields=url&tweet.fields=created_at`
+      `/2/users/${req.userId}/tweets?${query}`
     )
   }
 }

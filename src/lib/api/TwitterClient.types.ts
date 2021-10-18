@@ -4,6 +4,10 @@ export type ErrorResponse = {
 
 export type TwitterTimelineRequest = {
   userId: string
+  payload: {
+    start_time?: string
+    end_time?: string
+  }
 }
 
 export type TwitterTimeline = {

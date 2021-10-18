@@ -1,11 +1,20 @@
 import { isPresent } from "ts-is-present"
 import { twitterClient } from "./api/TwitterClient"
+import { TwitterTimelineRequest } from "./api/TwitterClient.types"
 
-export const getTargetTweets = (twitterIds: string[]) => {
+export const getTweetsWithMediaUrl = (
+  twitterIds: string[],
+  options: Partial<TwitterTimelineRequest["payload"]> = {}
+) => {
+  if (twitterIds.length === 0) {
+    console.warn("[twitter.ts]: The argument has zero twitterIds.")
+    return
+  }
+
   // TODO support multiple ids
   const userId = twitterIds[0]
   // TODO 前回取得した時点の日時以降のデータのみを取得する
-  const result = twitterClient.getTweets({ userId })
+  const result = twitterClient.getTweets({ userId, payload: options })
   if ("errors" in result) {
     return
   }
