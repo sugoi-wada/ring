@@ -10,7 +10,7 @@ export type Key =
  * e.g. clasp run 'setProperties' -p '[{"foo": "bar"}]'
  * cf. https://github.com/google/clasp/issues/569
  * */
-export const setProperties = (properties: Record<Key, string>) => {
+export const setProperties = (properties: Partial<Record<Key, string>>) => {
   PropertiesService.getScriptProperties().setProperties(properties, false)
 }
 
