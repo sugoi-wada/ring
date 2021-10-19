@@ -5,7 +5,9 @@ export type EnvKey =
   | "CLOUD_VISION_API_KEY"
   | "SHEET_ID"
 
-export type PreferenceKey = "LAST_RUN_AT"
+export const PreferenceKeys = ["LAST_RUN_AT"] as const
+
+export type PreferenceKey = typeof PreferenceKeys[number]
 
 export type Key = EnvKey | PreferenceKey
 
@@ -16,6 +18,12 @@ export type Key = EnvKey | PreferenceKey
  * */
 export const setProperties = (properties: Partial<Properties>) => {
   PropertiesService.getScriptProperties().setProperties(properties, false)
+}
+
+export const clearPreferences = () => {
+  PreferenceKeys.forEach((k) =>
+    PropertiesService.getScriptProperties().deleteProperty(k)
+  )
 }
 
 export type Properties = Record<EnvKey, string> &
