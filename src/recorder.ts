@@ -8,7 +8,7 @@ export const doRecording = (sheetId: string, stats: FitnessStatWithDate[]) => {
     s.date,
     s.title ?? "",
     s.name,
-    s.totalFitnessDuraion,
+    s.totalFitnessDuration,
     s.totalBurnedCalories,
     s.totalRunnningDistance,
   ])

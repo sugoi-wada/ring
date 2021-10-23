@@ -13,7 +13,7 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       },
       expect: {
         name: "なまえ",
-        totalFitnessDuraion: "00:10:50",
+        totalFitnessDuration: "00:10:50",
         totalBurnedCalories: 30.3,
         totalRunnningDistance: 0.12,
       },
@@ -28,7 +28,7 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       expect: {
         title: "かたがき",
         name: "なまえ",
-        totalFitnessDuraion: "00:18:18",
+        totalFitnessDuration: "00:18:18",
         totalBurnedCalories: 55.55,
         totalRunnningDistance: 0.4,
       },
@@ -42,7 +42,21 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       },
       expect: {
         name: "なまえ",
-        totalFitnessDuraion: "00:18:18",
+        totalFitnessDuration: "00:18:18",
+        totalBurnedCalories: 44.45,
+        totalRunnningDistance: 0,
+      },
+    },
+    {
+      desc: "活動時間のOCRミス",
+      target: {
+        locale: "ja",
+        description:
+          "R 画面を撮影する\n本日の運動結果\nなまえ\n12 4»\n合計活動時間\n44.45kcal\n合計消費力ロリー\n合計走行距離\n次へ\n",
+      },
+      expect: {
+        name: "なまえ",
+        totalFitnessDuration: "00:12:04",
         totalBurnedCalories: 44.45,
         totalRunnningDistance: 0,
       },
@@ -51,6 +65,6 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
 
 testData.forEach((t) => {
   test(t.desc, () => {
-    expect(parseText(t.target)).toEqual(t.expect)
+    expect(parseText(t.target)).toEqual({ ok: true, fitnessStat: t.expect })
   })
 })

@@ -1,6 +1,6 @@
 import { OCRFirstText } from "./lib/api/VisionClient.types"
 import { doOCR } from "./lib/ocr"
-import { parseText } from "./parser"
+import { ParseSuccess, parseText } from "./parser"
 import { getProperties, setProperties } from "./properties"
 import { doRecording } from "./recorder"
 import { getTweetsWithMediaUrl } from "./lib/twitter"
@@ -28,13 +28,16 @@ export const ringFitAdventure = () => {
     (res) => res.textAnnotations[0] as OCRFirstText
   )
   // For DEBUG
-  texts.map((t) => console.log("OCR Compact Text: ", t.description))
+  texts.map((t) => console.log("OCR description: ", t.description))
   doRecording(
     properties.SHEET_ID,
-    texts.map(parseText).map((s, i) => ({
-      date: dayjs(tweets[i].created_at).format("YYYY/MM/DD"),
-      ...s,
-    }))
+    texts
+      .map(parseText)
+      .filter((r) => r.ok)
+      .map((s, i) => ({
+        date: dayjs(tweets[i].created_at).format("YYYY/MM/DD"),
+        ...(s as ParseSuccess).fitnessStat,
+      }))
   )
   setProperties({ LAST_RUN_AT: now.toISOString() })
 }

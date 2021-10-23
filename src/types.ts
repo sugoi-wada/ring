@@ -4,7 +4,7 @@ export type FitnessStat = {
   /** 名前 */
   name: string
   /** 合計活動時間（hh:mm:ss） */
-  totalFitnessDuraion: string
+  totalFitnessDuration: string
   /** 合計消費カロリー（kcal） */
   totalBurnedCalories: number
   /** 合計走行距離（km） */

@@ -2,35 +2,63 @@ import { isPresent } from "ts-is-present"
 import { OCRFirstText } from "./lib/api/VisionClient.types"
 import { FitnessStat } from "./types"
 
-export const parseText = (text: OCRFirstText): FitnessStat => {
-  const texts = text.description.split("\n")
+export type ParseResult = ParseSuccess | ParseError
 
-  if (texts.length === 12) {
-    return {
-      title: texts[2],
-      name: texts[3],
-      totalFitnessDuraion: formatDuration(texts[4]),
-      totalBurnedCalories: formatCalorie(texts[6]),
-      totalRunnningDistance: formatDistance(texts[8]),
-    }
-  } else {
-    return {
-      name: texts[2],
-      totalFitnessDuraion: formatDuration(texts[3]),
-      totalBurnedCalories: formatCalorie(texts[5]),
-      totalRunnningDistance: formatDistance(texts[7]),
-    }
+export type ParseSuccess = {
+  ok: true
+  fitnessStat: FitnessStat
+}
+
+export type ParseError = {
+  ok: false
+  error: {
+    message: string
   }
 }
 
-const formatCalorie = (calorie: string) => Number(calorie.replace("kcal", ""))
-const formatDistance = (distance: string) => Number(distance.replace("km", ""))
+export const parseText = (text: OCRFirstText): ParseResult => {
+  const groups = text.description.match(regex)?.groups ?? {}
 
-/** mm分ss秒をhh:mm:ssに変換する */
-const formatDuration = (duration: string) =>
+  for (const k of requireKeys) {
+    if (!(k in groups)) {
+      console.log(
+        `Parse failure. The '${k}' not found in ${JSON.stringify(groups)}.`
+      )
+      return {
+        ok: false,
+        error: {
+          message: `Parse failure. The '${k}' not found.`,
+        },
+      }
+    }
+  }
+
+  console.log(`parse regex result: ${JSON.stringify(groups)}`)
+  return {
+    ok: true,
+    fitnessStat: {
+      title: groups["title"],
+      name: groups["name"],
+      totalFitnessDuration: formatDuration(groups["min"], groups["sec"]),
+      totalBurnedCalories: Number(groups["kcal"]),
+      // 走らずに終了した場合にパースできない
+      totalRunnningDistance: isNaN(Number(groups["km"]))
+        ? 0
+        : Number(groups["km"]),
+    },
+  }
+}
+
+/** min と sec を hh:mm:ss に変換する */
+const formatDuration = (min: string, sec: string) =>
   "00:" +
-  duration
-    .split(/(分|秒)/)
+  [min, sec]
     .map((d) => (isNaN(Number(d)) || d === "" ? undefined : d.padStart(2, "0")))
     .filter(isPresent)
     .join(":")
+
+const regex =
+  /[^\n]+\n[^\n]+\n(?:(?<title>[^\n]+)\n)?(?<name>[^\n]+)\n(?<min>\d{0,3})[^\d](?<sec>\d{1,2})[^\d]\n[^\n]+\n(?<kcal>[\d]{1,4}\.?[\d]{0,2})kcal\n[^\n]+\n(?<km>[\d]{1,4}\.?[\d]{0,2})?/u
+
+/** 正規表現内で最低限見つけ出さなければならない要素のキー */
+const requireKeys = ["name", "min", "sec", "kcal"]
