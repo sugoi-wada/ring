@@ -13,13 +13,12 @@ export const getTweetsWithMediaUrl = (
 
   // TODO support multiple ids
   const userId = twitterIds[0]
-  // TODO 前回取得した時点の日時以降のデータのみを取得する
   const result = twitterClient.getTweets({ userId, payload: options })
   if ("errors" in result) {
     return
   }
   // TODO 余計なツイートはフィルタリングして省く
-  const tweets = result.data.map((d) => ({
+  const tweets = result.data?.map((d) => ({
     ...d,
     attachments: d.attachments.media_keys
       .map((media_key) =>
@@ -27,5 +26,5 @@ export const getTweetsWithMediaUrl = (
       )
       .filter(isPresent),
   }))
-  return tweets.slice(0, 2)
+  return tweets
 }
