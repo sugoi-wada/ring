@@ -1,19 +1,14 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.202.1/containers/typescript-node
 {
-	"name": "Node.js",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"settings": {
-		"[typescript]": {
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-	},
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode"
-	],
-	"postCreateCommand": "yarn install",
-	"remoteUser": "node"
+  "name": "Node.js",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "settings": {
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+  },
+  "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+  "postCreateCommand": "yarn install",
+  "remoteUser": "node"
 }
