@@ -59,7 +59,7 @@ jobs:
         if: ${{ steps.tag.outputs.exists }} == 'false'
 
       - name: Deploy
-        run: npx @google/clasp deploy -i ${{ $DEPLOYMENT_ID }} -d ${{ steps.version.outputs.value }}
+        run: npx @google/clasp deploy -i $DEPLOYMENT_ID -d ${{ steps.version.outputs.value }}
         if: ${{ steps.tag.outputs.exists }} == 'false'
 
       - name: package-version-to-git-tag
