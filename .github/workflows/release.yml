@@ -63,7 +63,7 @@ jobs:
         if: ${{ steps.tag.outputs.exists }} == 'false'
 
       - name: package-version-to-git-tag
-        uses: pkgdeps/pkgdeps/git-tag-action@v2
+        uses: pkgdeps/git-tag-action@v2
         with:
           version: ${{ steps.version.outputs.value }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
