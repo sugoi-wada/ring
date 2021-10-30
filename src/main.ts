@@ -1,10 +1,12 @@
 import { OCRFirstText } from "./lib/api/VisionClient.types"
 import { doOCR } from "./lib/ocr"
-import { ParseSuccess, parseText } from "./parser"
+import { parseText } from "./parser"
 import { getProperties, setProperties } from "./properties"
 import { doRecording } from "./recorder"
-import { getTweetsWithMediaUrl } from "./lib/twitter"
+import { getTweetsWithMediaUrl, TweetWithMediaUrl } from "./lib/twitter"
 import dayjs from "dayjs"
+import { isPresent } from "ts-is-present"
+import { FitnessStat } from "./types"
 
 export const hello = () => {
   console.log(`Hello World！`)
@@ -25,23 +27,49 @@ export const ringFitAdventure = () => {
   })
   if (!tweets) return
   // ツイート内の画像をOCRして名前・活動時間・消費カロリー・走行距離を取得
-  const ocrResult = doOCR(tweets.map((t) => t.attachments[0].url))
-  if (!ocrResult) return
-  const texts = ocrResult.responses.map(
-    (res) => res.textAnnotations[0] as OCRFirstText
+  const results = parseTweetImages(
+    tweets.map((t) => ({ id: t.id, ...t.attachments[0] }))
   )
-  // For DEBUG
-  texts.map((t) => console.log("OCR description: ", t.description))
+  if (!results) return
   // Sheet の行に日付とOCRの結果レコードを追加
   doRecording(
     properties.SHEET_ID,
-    texts
-      .map(parseText)
-      .filter((r) => r.ok)
-      .map((s, i) => ({
-        date: dayjs(tweets[i].created_at).format("YYYY/MM/DD"),
-        ...(s as ParseSuccess).fitnessStat,
-      }))
+    results
+      .map((result) => {
+        const tweet = tweets.find((t) => t.id === result.tweetId)
+        if (!tweet) return
+        return {
+          date: dayjs(tweet.created_at).format("YYYY/MM/DD"),
+          ...result.fitnessStat,
+        }
+      })
+      .filter(isPresent)
   )
   setProperties({ LAST_RUN_AT: now.toISOString() })
+}
+
+const parseTweetImages = (
+  tweetImages: (Pick<TweetWithMediaUrl, "id"> &
+    Pick<TweetWithMediaUrl["attachments"][number], "type" | "url">)[]
+):
+  | { tweetId: TweetWithMediaUrl["id"]; fitnessStat: FitnessStat }[]
+  | undefined => {
+  const ocrResult = doOCR(tweetImages.map((t) => t.url))
+  if (!ocrResult) return
+  const texts = ocrResult.responses
+    .map((res, i) => {
+      const ocrText = res.textAnnotations[0] as OCRFirstText
+      const parseResult = parseText(ocrText)
+      if (!parseResult.ok) {
+        console.error(`Parse failed. ${ocrText.locale} ${ocrText.description}`)
+        return
+      }
+
+      return {
+        tweetId: tweetImages[i].id,
+        fitnessStat: parseResult.fitnessStat,
+      }
+    })
+    .filter(isPresent)
+  return texts
 }
