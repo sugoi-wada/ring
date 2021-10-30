@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "format": "prettier --write \"./**/*.{ts,tsx}\"",
-    "build": "webpack",
+    "build:dev": "webpack",
+    "build": "webpack --mode=production",
     "push": "yarn build && clasp push",
-    "dev": "watch 'yarn push' ./src",
+    "dev": "webpack --watch --cache & clasp push -w",
     "lint": "eslint --fix --ext .ts,.js --ignore-path .gitignore .",
     "test": "jest"
   },

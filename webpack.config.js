@@ -4,7 +4,7 @@ const GasPlugin = require("gas-webpack-plugin")
 const ESLintPlugin = require("eslint-webpack-plugin")
 
 module.exports = {
-  mode: "production",
+  mode: "development",
   context: __dirname,
   entry: "./src/index.ts",
   output: {
@@ -24,4 +24,7 @@ module.exports = {
     ],
   },
   plugins: [new ESLintPlugin(), new GasPlugin()],
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 }
