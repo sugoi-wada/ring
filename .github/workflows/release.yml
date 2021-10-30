@@ -1,0 +1,72 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "package.json"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      CLASPRC_ACCESS_TOKEN: ${{ secrets.CLASPRC_ACCESS_TOKEN }}
+      CLASPRC_CLIENT_ID: ${{ secrets.CLASPRC_CLIENT_ID }}
+      CLASPRC_CLIENT_SECRET: ${{ secrets.CLASPRC_CLIENT_SECRET }}
+      CLASPRC_EXPIRY_DATE: ${{ secrets.CLASPRC_EXPIRY_DATE }}
+      CLASPRC_ID_TOKEN: ${{ secrets.CLASPRC_ID_TOKEN }}
+      CLASPRC_REFRESH_TOKEN: ${{ secrets.CLASPRC_REFRESH_TOKEN }}
+      CLASP_SCRIPT_ID: ${{ secrets.CLASP_SCRIPT_ID }}
+      DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Setup
+        shell: bash
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        shell: bash
+        run: yarn build
+
+      - name: Create clasp files
+        run: bash scripts/setup.sh
+
+      - name: Extract version from package.json
+        uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: "jq .version package.json -r"
+
+      - uses: mukunku/tag-exists-action@v1.0.0
+        id: tag
+        with:
+          tag: v${{ steps.version.outputs.value }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload files
+        run: npx @google/clasp push --force
+        if: ${{ steps.tag.outputs.exists }} == 'false'
+
+      - name: Deploy
+        run: npx @google/clasp deploy -i ${{ $DEPLOYMENT_ID }} -d ${{ steps.version.outputs.value }}
+        if: ${{ steps.tag.outputs.exists }} == 'false'
+
+      - name: package-version-to-git-tag
+        uses: pkgdeps/pkgdeps/git-tag-action@v2
+        with:
+          version: ${{ steps.version.outputs.value }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repo: ${{ github.repository }}
+          git_commit_sha: ${{ github.sha }}
+          git_tag_prefix: "v"
