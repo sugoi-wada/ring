@@ -1,11 +1,25 @@
 import { isPresent } from "ts-is-present"
 import { twitterClient } from "./api/TwitterClient"
-import { TwitterTimelineRequest } from "./api/TwitterClient.types"
+import {
+  TwitterTimeline,
+  TwitterTimelineRequest,
+} from "./api/TwitterClient.types"
+
+export type TweetWithMediaUrl = Omit<
+  TwitterTimeline["data"][number],
+  "attachments"
+> & {
+  attachments: {
+    media_key: string
+    type: string
+    url: string
+  }[]
+}
 
 export const getTweetsWithMediaUrl = (
   twitterIds: string[],
   options: Partial<TwitterTimelineRequest["payload"]> = {}
-) => {
+): TweetWithMediaUrl[] | undefined => {
   if (twitterIds.length === 0) {
     console.warn("[twitter.ts]: The argument has zero twitterIds.")
     return
@@ -18,7 +32,7 @@ export const getTweetsWithMediaUrl = (
     return
   }
   // TODO 余計なツイートはフィルタリングして省く
-  const tweets = result.data?.map((d) => ({
+  const tweets: TweetWithMediaUrl[] = result.data?.map((d) => ({
     ...d,
     attachments: d.attachments.media_keys
       .map((media_key) =>

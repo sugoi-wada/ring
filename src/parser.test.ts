@@ -13,7 +13,11 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       },
       expect: {
         name: "なまえ",
-        totalFitnessDuration: "00:10:50",
+        totalFitnessDuration: {
+          hours: 0,
+          minutes: 10,
+          seconds: 50,
+        },
         totalBurnedCalories: 30.3,
         totalRunnningDistance: 0.12,
       },
@@ -28,7 +32,11 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       expect: {
         title: "かたがき",
         name: "なまえ",
-        totalFitnessDuration: "00:18:18",
+        totalFitnessDuration: {
+          hours: 0,
+          minutes: 18,
+          seconds: 18,
+        },
         totalBurnedCalories: 55.55,
         totalRunnningDistance: 0.4,
       },
@@ -42,7 +50,11 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       },
       expect: {
         name: "なまえ",
-        totalFitnessDuration: "00:18:18",
+        totalFitnessDuration: {
+          hours: 0,
+          minutes: 18,
+          seconds: 18,
+        },
         totalBurnedCalories: 44.45,
         totalRunnningDistance: 0,
       },
@@ -56,7 +68,11 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       },
       expect: {
         name: "なまえ",
-        totalFitnessDuration: "00:12:04",
+        totalFitnessDuration: {
+          hours: 0,
+          minutes: 12,
+          seconds: 4,
+        },
         totalBurnedCalories: 44.45,
         totalRunnningDistance: 0,
       },

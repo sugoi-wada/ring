@@ -4,6 +4,7 @@ export type EnvKey =
   | "TW_TARGET_IDS"
   | "CLOUD_VISION_API_KEY"
   | "SHEET_ID"
+  | "SLACK_WEBHOOK_URL"
 
 export const PreferenceKeys = ["LAST_RUN_AT"] as const
 

@@ -1,5 +1,5 @@
 import { hello, ringFitAdventure } from "./main"
-import { clearPreferences, setProperties } from "./properties"
+import { clearPreferences, getProperties, setProperties } from "./properties"
 
 declare const global: {
   [x: string]: unknown
@@ -7,5 +7,7 @@ declare const global: {
 
 global.hello = hello
 global.setProperties = setProperties
+global.getProperties = getProperties
 global.clearPreferences = clearPreferences
-global.ringFitAdventure = ringFitAdventure
+global.ringFitAdventure = () => ringFitAdventure("prod")
+global.ringFitAdventure_dev = () => ringFitAdventure("dev")
