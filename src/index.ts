@@ -8,4 +8,5 @@ declare const global: {
 global.hello = hello
 global.setProperties = setProperties
 global.clearPreferences = clearPreferences
-global.ringFitAdventure = ringFitAdventure
+global.ringFitAdventure = () => ringFitAdventure("prod")
+global.ringFitAdventure_dev = () => ringFitAdventure("dev")

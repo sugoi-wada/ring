@@ -1,4 +1,3 @@
-import { isPresent } from "ts-is-present"
 import { OCRFirstText } from "./lib/api/VisionClient.types"
 import { FitnessStat } from "./types"
 
@@ -39,23 +38,19 @@ export const parseText = (text: OCRFirstText): ParseResult => {
     fitnessStat: {
       title: groups["title"],
       name: groups["name"],
-      totalFitnessDuration: formatDuration(groups["min"], groups["sec"]),
+      totalFitnessDuration: {
+        // TODO: Currently hours not supported
+        hours: toNumberOrZero("0"),
+        minutes: toNumberOrZero(groups["min"]),
+        seconds: toNumberOrZero(groups["sec"]),
+      },
       totalBurnedCalories: Number(groups["kcal"]),
-      // 走らずに終了した場合にパースできない
-      totalRunnningDistance: isNaN(Number(groups["km"]))
-        ? 0
-        : Number(groups["km"]),
+      totalRunnningDistance: toNumberOrZero(groups["km"]),
     },
   }
 }
 
-/** min と sec を hh:mm:ss に変換する */
-const formatDuration = (min: string, sec: string) =>
-  "00:" +
-  [min, sec]
-    .map((d) => (isNaN(Number(d)) || d === "" ? undefined : d.padStart(2, "0")))
-    .filter(isPresent)
-    .join(":")
+const toNumberOrZero = (ele: string) => (isNaN(Number(ele)) ? 0 : Number(ele))
 
 const regex =
   /[^\n]+\n[^\n]+\n(?:(?<title>[^\n]+)\n)?(?<name>[^\n]+)\n(?<min>\d{0,3})[^\d](?<sec>\d{1,2})[^\d]\n[^\n]+\n(?<kcal>[\d]{1,4}\.?[\d]{0,2})kcal\n[^\n]+\n(?<km>[\d]{1,4}\.?[\d]{0,2})?/u

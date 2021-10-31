@@ -1,5 +1,6 @@
-import { FitnessStatWithDate } from "./types"
+import { FitnessStat, FitnessStatWithDate } from "./types"
 
+/** Sheet の行に日付と運動の結果レコードを追加 */
 export const doRecording = (sheetId: string, stats: FitnessStatWithDate[]) => {
   if (stats.length < 1) return
   const spreadSheet = SpreadsheetApp.openById(sheetId)
@@ -8,7 +9,7 @@ export const doRecording = (sheetId: string, stats: FitnessStatWithDate[]) => {
     s.date,
     s.title ?? "",
     s.name,
-    s.totalFitnessDuration,
+    formatDuration(s.totalFitnessDuration),
     s.totalBurnedCalories,
     s.totalRunnningDistance,
   ])
@@ -16,3 +17,9 @@ export const doRecording = (sheetId: string, stats: FitnessStatWithDate[]) => {
     .getRange(sheet.getLastRow() + 1, 1, values.length, values[0].length)
     .setValues(values)
 }
+
+/** hours と min と sec を hh:mm:ss に変換する */
+const formatDuration = (d: FitnessStat["totalFitnessDuration"]) =>
+  [d.hours, d.minutes, d.seconds]
+    .map((d) => d.toString().padStart(2, "0"))
+    .join(":")
