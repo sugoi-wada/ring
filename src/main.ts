@@ -43,7 +43,7 @@ export const ringFitAdventure = (mode: "dev" | "prod") => {
       }
     })
     .filter(isPresent)
-  doRecording(properties.SHEET_ID, stats)
+  if (mode !== "dev") doRecording(properties.SHEET_ID, stats)
   slackPost(createMessage(stats))
 }
 
