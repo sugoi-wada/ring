@@ -11,7 +11,8 @@
   "extensions": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "orta.vscode-jest"
   ],
   "postCreateCommand": "yarn install",
   "remoteUser": "node",
