@@ -38,7 +38,7 @@ export const ringFitAdventure = (mode: "dev" | "prod") => {
       const tweet = tweets.find((t) => t.id === result.tweetId)
       if (!tweet) return
       return {
-        date: dayjs(tweet.created_at).format("YYYY/MM/DD"),
+        date: dayjs(tweet.created_at).format("YYYY/MM/DD HH:mm:ss"),
         ...result.fitnessStat,
       }
     })
