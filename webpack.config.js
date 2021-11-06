@@ -2,6 +2,7 @@
 const path = require("path")
 const GasPlugin = require("gas-webpack-plugin")
 const ESLintPlugin = require("eslint-webpack-plugin")
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 
 module.exports = {
   mode: "development",
@@ -23,7 +24,11 @@ module.exports = {
       },
     ],
   },
-  plugins: [new ESLintPlugin(), new GasPlugin()],
+  plugins: [
+    new ForkTsCheckerWebpackPlugin(),
+    new ESLintPlugin(),
+    new GasPlugin(),
+  ],
   watchOptions: {
     ignored: /node_modules/,
   },
