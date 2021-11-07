@@ -8,13 +8,11 @@ class SlackClient {
   }
 
   postMessages(req: PostMessagesRequest) {
-    const { text } = req
-    return this._api.do(req.webhookUrl, {
+    const { webhookUrl, ...payload } = req
+    return this._api.do(webhookUrl, {
       method: "post",
       contentType: "application/json",
-      payload: JSON.stringify({
-        text,
-      }),
+      payload: JSON.stringify(payload),
     })
   }
 }
