@@ -82,7 +82,7 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
       target: {
         locale: "ja",
         description:
-          "R 画面を撮影する\n本日の運動結果\nなまえ\n25 10\n合計活動時間\n121.39kcal\n合計消費力ロリー\n2.01 km\n合計走行距離\n次へ\n",
+          "R 画面を撮影する\n本日の運動結果\nなまえ\n25 10\n合計活動時間\n121.39kcal\n合計消費力ロリー\n2. 01 km\n合計走行距離\n次へ\n",
       },
       expect: {
         name: "なまえ",
