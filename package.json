@@ -23,7 +23,7 @@
     "@babel/core": "7.16.0",
     "@babel/preset-env": "7.16.0",
     "@babel/preset-typescript": "7.16.0",
-    "@types/google-apps-script": "1.0.39",
+    "@types/google-apps-script": "1.0.41",
     "@types/google-apps-script-oauth2": "38.0.0",
     "@types/jest": "27.0.2",
     "@typescript-eslint/parser": "5.3.0",
