@@ -1,12 +1,12 @@
 {
-  "name": "Node.js",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  "name": "Ring app",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "node",
   "settings": {
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "jest.jestCommandLine": "yarn test"
   },
   "extensions": [
     "dbaeumer.vscode-eslint",
@@ -15,7 +15,5 @@
     "orta.vscode-jest"
   ],
   "postCreateCommand": "yarn install",
-  "remoteUser": "node",
-  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/node/ring",
-  "workspaceFolder": "/home/node/ring"
+  "workspaceFolder": "/app"
 }
