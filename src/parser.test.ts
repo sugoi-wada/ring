@@ -95,6 +95,24 @@ const testData: { desc: string; target: OCRFirstText; expect: FitnessStat }[] =
         totalRunnningDistance: 2.01,
       },
     },
+    {
+      desc: "活動時間のOCRミス その3 数値5がsになり、0がOになってしまい、さらにカロリーが分割されたパターン",
+      target: {
+        locale: "ja",
+        description:
+          "本日の運動結果\nR 画面を撮影する\nなまえ\n11分12秒\n合計活動時間\n43.s\n合計消費力ロリー\n57kcal\nО.37km\n合計走行距離\n次へ\n",
+      },
+      expect: {
+        name: "なまえ",
+        totalFitnessDuration: {
+          hours: 0,
+          minutes: 11,
+          seconds: 12,
+        },
+        totalBurnedCalories: 43.57,
+        totalRunnningDistance: 0.37,
+      },
+    },
   ]
 
 testData.forEach((t) => {

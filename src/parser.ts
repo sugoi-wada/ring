@@ -16,37 +16,71 @@ export type ParseError = {
 }
 
 export const parseText = (text: OCRFirstText): ParseResult => {
-  const groups = text.description.match(regex)?.groups ?? {}
+  const textLines = text.description.split("\n")
+  textLines.splice(0, 2) // 最初の2配列は決まりの不要な文字列が入っているので Drop する
 
-  for (const k of requireKeys) {
-    if (!(k in groups)) {
-      console.log(
-        `Parse failure. The '${k}' not found in ${JSON.stringify(groups)}.`
-      )
-      return {
-        ok: false,
-        error: {
-          message: `Parse failure. The '${k}' not found.`,
-        },
-      }
-    }
-  }
+  // 合計活動時間を抽出
+  const totalFitnessDurationIndex =
+    textLines.findIndex((textLine) => textLine.includes("合計活動時間")) - 1
+  const totalFitnessDuration = textLines[totalFitnessDurationIndex].match(
+    /(?<min>\d{0,3})[^\d]+(?<sec>\d{1,2})[^\d]*/u
+  )?.groups
 
-  console.log(`parse regex result: ${JSON.stringify(groups)}`)
+  // 肩書き（あれば）と名前を抽出
+  const titleIndex = totalFitnessDurationIndex - 2
+  const title = titleIndex >= 0 ? textLines[titleIndex] : undefined
+  const name = textLines[totalFitnessDurationIndex - 1]
+
+  // 合計消費カロリーと合計走行距離を抽出するための準備
+  const nextTextLines = textLines
+    .slice(totalFitnessDurationIndex + 2)
+    .filter((textLine) => textLine.match(/(合計)|(次へ)/g) == null)
+    .filter((textLine) => textLine != "")
+
+  // 合計消費カロリーを抽出
+  const kcalUnitIndex = nextTextLines.findIndex((l) => l.includes("kcal"))
+  const totalBurnedCalories = nextTextLines
+    .slice(0, kcalUnitIndex + 1)
+    .join("")
+    .match(/(?<int_part>\d{0,3})[^\d]+(?<decimal_part>\d{1,2})[^\d]*/u)?.groups
+
+  // 合計走行距離を抽出（走っていないときは存在しない）
+  const kmUnitIndex = nextTextLines.findIndex((l) => l.includes("km"))
+  const totalRunnningDistance =
+    kmUnitIndex >= 0
+      ? nextTextLines
+          .slice(kcalUnitIndex + 1, kmUnitIndex + 1)
+          .join("")
+          .match(/(?<int_part>\d{0,3})[^\d]+(?<decimal_part>\d{1,2})[^\d]*/u)
+          ?.groups
+      : undefined
+
+  console.log(
+    `parse result: ${JSON.stringify({
+      title,
+      name,
+      totalFitnessDuration,
+      totalBurnedCalories,
+      totalRunnningDistance,
+    })}`
+  )
+
   return {
     ok: true,
     fitnessStat: {
-      title: groups["title"],
-      name: groups["name"],
+      title,
+      name,
       totalFitnessDuration: {
         // TODO: Currently hours not supported
         hours: toNumberOrZero("0"),
-        minutes: toNumberOrZero(groups["min"].replaceAll(/\s/g, "")),
-        seconds: toNumberOrZero(groups["sec"].replaceAll(/\s/g, "")),
+        minutes: toNumberOrZero(totalFitnessDuration?.min),
+        seconds: toNumberOrZero(totalFitnessDuration?.sec),
       },
-      totalBurnedCalories: Number(groups["kcal"].replaceAll(/\s/g, "")),
+      totalBurnedCalories: toNumberOrZero(
+        `${totalBurnedCalories?.int_part}.${totalBurnedCalories?.decimal_part}`
+      ),
       totalRunnningDistance: toNumberOrZero(
-        groups["km"]?.replaceAll(/\s/g, "")
+        `${totalRunnningDistance?.int_part}.${totalRunnningDistance?.decimal_part}`
       ),
     },
   }
@@ -54,9 +88,3 @@ export const parseText = (text: OCRFirstText): ParseResult => {
 
 const toNumberOrZero = (ele: string | undefined) =>
   isNaN(Number(ele)) ? 0 : Number(ele)
-
-const regex =
-  /[^\n]+\n[^\n]+\n(?:(?<title>[^\n]+)\n)?(?<name>[^\n]+)\n(?<min>\d{0,3})[^\d](?<sec>\d{1,2})[^\d]*\n[^\n]+\n(?<kcal>[\d]{1,4}\.?[\d]{0,2})kcal\n[^\n]+\n(?<km>[\d]{1,4}\.?\s?[\d]{0,2})?/u
-
-/** 正規表現内で最低限見つけ出さなければならない要素のキー */
-const requireKeys = ["name", "min", "sec", "kcal"]
