@@ -14,7 +14,7 @@ export type PostMessagesRequest = IncomingWebhookRequest &
 
 export type MessageBlock = SectionField | HeaderField
 
-export type SectionField =
+export type SectionField = (
   | {
       type: "section"
       text: TextField
@@ -23,6 +23,9 @@ export type SectionField =
       type: "section"
       fields: TextField[]
     }
+) & {
+  accessory?: ImageField
+}
 
 export type TextField = {
   type: "mrkdwn" | "plain_text"
@@ -33,4 +36,10 @@ export type TextField = {
 export type HeaderField = {
   type: "header"
   text: TextField
+}
+
+export type ImageField = {
+  type: "image"
+  image_url: string
+  alt_text: string
 }
