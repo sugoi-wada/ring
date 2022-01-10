@@ -1,16 +1,39 @@
-name: Deploy
+name: Publish Release
 
 on:
   push:
     branches:
-      - "!*"
-    tags:
-      - "v*"
+      - main
+    paths:
+      - "src/**"
+      - "package.json"
 
 jobs:
-  release:
+  check_version:
+    name: Check Version tag
     runs-on: ubuntu-latest
+    outputs:
+      tag_exists: ${{ steps.tag_check.outputs.exists }}
+      version: v${{ steps.version.outputs.value }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract version from package.json
+        uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: "jq .version package.json -r"
 
+      - uses: mukunku/tag-exists-action@v1.0.0
+        id: tag_check
+        with:
+          tag: v${{ steps.version.outputs.value }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo ${{ steps.tag_check.outputs.exists }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: check_version
+    if: needs.check_version.outputs.tag_exists == 'false'
     env:
       CLASPRC_ACCESS_TOKEN: ${{ secrets.CLASPRC_ACCESS_TOKEN }}
       CLASPRC_CLIENT_ID: ${{ secrets.CLASPRC_CLIENT_ID }}
@@ -22,8 +45,6 @@ jobs:
       DEPLOYMENT_ID: ${{ secrets.DEPLOYMENT_ID }}
 
     steps:
-      - uses: actions/checkout@v2
-
       - uses: actions/setup-node@v2
         with:
           node-version: "16"
@@ -40,21 +61,17 @@ jobs:
       - name: Create clasp files
         run: bash scripts/setup.sh
 
-      - name: Extract version from package.json
-        uses: sergeysova/jq-action@v2
-        id: version
-        with:
-          cmd: "jq .version package.json -r"
-
-      - uses: mukunku/tag-exists-action@v1.0.0
-        id: tag
-        with:
-          tag: v${{ steps.version.outputs.value }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload files
         run: npx @google/clasp push --force
 
       - name: Deploy
-        run: npx @google/clasp deploy -i $DEPLOYMENT_ID -d ${{ steps.version.outputs.value }}
+        run: npx @google/clasp deploy -i $DEPLOYMENT_ID -d ${{ needs.check_version.outputs.version }}
+
+      - name: Add tag if the version tag doesn't exist
+        uses: pkgdeps/git-tag-action@v2
+        with:
+          version: ${{ needs.check_version.outputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repo: ${{ github.repository }}
+          git_commit_sha: ${{ github.sha }}
+          git_tag_prefix: "v"
