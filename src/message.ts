@@ -1,8 +1,8 @@
 import { isPresent } from "ts-is-present"
 import { MessageBlock } from "./lib/api/SlackClient.types"
-import { FitnessStat, FitnessStatWithDate } from "./types"
+import { FitnessStat } from "./types"
 
-export const createMessage = (stats: FitnessStatWithDate[]): MessageBlock[] => {
+export const createMessage = (stats: FitnessStat[]): MessageBlock[] => {
   return stats.flatMap((s) => [
     {
       type: "header",

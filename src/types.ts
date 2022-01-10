@@ -1,4 +1,6 @@
 export type FitnessStat = {
+  /** 実施日時 */
+  date: string
   /** 肩書き */
   title?: string
   /** 名前 */
@@ -13,8 +15,4 @@ export type FitnessStat = {
   totalBurnedCalories: number
   /** 合計走行距離（km） */
   totalRunnningDistance: number
-}
-
-export type FitnessStatWithDate = FitnessStat & {
-  date: string
 }

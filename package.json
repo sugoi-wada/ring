@@ -11,7 +11,8 @@
     "push": "yarn build && clasp push",
     "dev": "webpack --watch --cache & clasp push -w",
     "lint": "eslint --fix --ext .ts,.js --ignore-path .gitignore .",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "echo 'We use \"yarn build\" instead of \"yarn tsc\"' && yarn build"
   },
   "dependencies": {
     "core-js": "3.20.1",

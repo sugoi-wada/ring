@@ -1,35 +1,70 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "clasp login",
-            "type": "shell",
-            "command": "clasp login --creds creds.json",
-            "problemMatcher": []
-        },
-        {
-            "label": "clasp pull",
-            "type": "shell",
-            "command": "clasp pull",
-            "problemMatcher": []
-        },
-        {
-            "label": "clasp push",
-            "type": "shell",
-            "command": "clasp push",
-            "problemMatcher": []
-        },
-        {
-            "label": "clasp logout",
-            "type": "shell",
-            "command": "clasp logout",
-            "problemMatcher": []
-        },
-        {
-            "label": "yarn install",
-            "type": "shell",
-            "command": "yarn install",
-            "problemMatcher": []
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Login",
+      "type": "shell",
+      "command": "clasp login",
+      "problemMatcher": []
+    },
+    {
+      "label": "Push",
+      "type": "shell",
+      "command": "clasp push",
+      "problemMatcher": []
+    },
+    {
+      "label": "Logout",
+      "type": "shell",
+      "command": "clasp logout",
+      "problemMatcher": []
+    },
+    {
+      "label": "Yarn install",
+      "type": "shell",
+      "command": "yarn install",
+      "problemMatcher": []
+    },
+    {
+      "label": "Show Properties（require clasp login）",
+      "type": "shell",
+      "command": "clasp run 'getProperties'",
+      "problemMatcher": []
+    },
+    {
+      "label": "Set Property（require clasp login）",
+      "type": "shell",
+      "command": "clasp run 'setProperties' -p '[{\"${input:propsKey}\": \"${input:propsValue}\"}]'",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run（require clasp login）",
+      "type": "shell",
+      "command": "clasp run 'ringFitAdventure'",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "type": "pickString",
+      "id": "propsKey",
+      "description": "どのプロパティを設定しますか？",
+      "options": [
+        "TW_CLIENT_ID",
+        "TW_CLIENT_SECRET",
+        "TW_TARGET_IDS",
+        "CLOUD_VISION_API_KEY",
+        "SHEET_ID",
+        "SLACK_WEBHOOK_URL",
+        "ENV",
+        "LAST_RUN_AT"
+      ]
+    },
+    {
+      "id": "propsValue",
+      "description": "プロパティの値を入力してください",
+      "default": "WORLD",
+      "type": "promptString"
+    }
+  ]
 }

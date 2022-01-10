@@ -1,7 +1,7 @@
-import { FitnessStat, FitnessStatWithDate } from "./types"
+import { FitnessStat } from "./types"
 
 /** Sheet の行に日付と運動の結果レコードを追加 */
-export const doRecording = (sheetId: string, stats: FitnessStatWithDate[]) => {
+export const doRecording = (sheetId: string, stats: FitnessStat[]) => {
   if (stats.length < 1) return
   const spreadSheet = SpreadsheetApp.openById(sheetId)
   const sheet = spreadSheet.getActiveSheet()
