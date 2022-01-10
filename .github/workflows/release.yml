@@ -1,11 +1,12 @@
-name: Deploy
+name: Publish Release
 
 on:
   push:
     branches:
-      - "!*"
-    tags:
-      - "v*"
+      - main
+    paths:
+      - "src/**"
+      - "package.json"
 
 jobs:
   release:
@@ -55,6 +56,17 @@ jobs:
 
       - name: Upload files
         run: npx @google/clasp push --force
+        if: ${{ steps.tag.outputs.exists }} == 'false'
 
       - name: Deploy
         run: npx @google/clasp deploy -i $DEPLOYMENT_ID -d ${{ steps.version.outputs.value }}
+        if: ${{ steps.tag.outputs.exists }} == 'false'
+
+      - name: package-version-to-git-tag
+        uses: pkgdeps/git-tag-action@v2
+        with:
+          version: ${{ steps.version.outputs.value }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repo: ${{ github.repository }}
+          git_commit_sha: ${{ github.sha }}
+          git_tag_prefix: "v"
