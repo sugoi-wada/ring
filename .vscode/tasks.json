@@ -10,7 +10,7 @@
     {
       "label": "Push",
       "type": "shell",
-      "command": "clasp push",
+      "command": "yarn push",
       "problemMatcher": []
     },
     {
