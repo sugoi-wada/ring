@@ -1,8 +1,11 @@
 import { isPresent } from "ts-is-present"
 import { MessageBlock } from "./lib/api/SlackClient.types"
+import { TweetWithMediaUrl } from "./lib/twitter"
 import { FitnessStat } from "./types"
 
-export const createMessage = (stats: FitnessStat[]): MessageBlock[] => {
+export const createMessage = (
+  stats: (FitnessStat & { tweet: Pick<TweetWithMediaUrl, "attachments"> })[]
+): MessageBlock[] => {
   return stats.flatMap((s) => [
     {
       type: "header",
@@ -32,6 +35,11 @@ export const createMessage = (stats: FitnessStat[]): MessageBlock[] => {
           text: `*合計走行距離:*\n${s.totalRunnningDistance}km`,
         },
       ],
+      accessory: {
+        type: "image",
+        image_url: s.tweet.attachments[0].url,
+        alt_text: "今回のリザルト",
+      },
     },
   ])
 }
