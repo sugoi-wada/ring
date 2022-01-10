@@ -5,7 +5,7 @@ export type ParseResult = ParseSuccess | ParseError
 
 export type ParseSuccess = {
   ok: true
-  fitnessStat: FitnessStat
+  fitnessStat: Omit<FitnessStat, "date">
 }
 
 export type ParseError = {
