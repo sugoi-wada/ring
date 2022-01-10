@@ -9,5 +9,4 @@ global.hello = hello
 global.setProperties = setProperties
 global.getProperties = getProperties
 global.clearPreferences = clearPreferences
-global.ringFitAdventure = () => ringFitAdventure("prod")
-global.ringFitAdventure_dev = () => ringFitAdventure("dev")
+global.ringFitAdventure = ringFitAdventure

@@ -13,18 +13,19 @@ export const hello = () => {
 
 const properties = getProperties()
 
-export const ringFitAdventure = (mode: "dev" | "prod") => {
+export const ringFitAdventure = () => {
+  const isProduction = properties.ENV === "production"
   const now = dayjs()
   // Timeline からリングフィットのツイート一覧を取得
   const tweets = getTweetsWithMediaUrl(properties.TW_TARGET_IDS.split(","), {
-    start_time: mode === "dev" ? undefined : properties.LAST_RUN_AT,
+    start_time: properties.LAST_RUN_AT,
     end_time: now.toISOString(),
   })?.sort((a, b) => {
     if (a.created_at < b.created_at) return -1
     if (a.created_at > b.created_at) return 1
     return 0
   })
-  if (mode !== "dev") setProperties({ LAST_RUN_AT: now.toISOString() })
+  if (isProduction) setProperties({ LAST_RUN_AT: now.toISOString() })
   if (!tweets) return
   const parseResults = parseTweetImages(
     tweets.map((t) => ({ id: t.id, image: { ...t.attachments[0] } }))
@@ -41,6 +42,11 @@ export const ringFitAdventure = (mode: "dev" | "prod") => {
       }
     })
     .filter(isPresent)
-  if (mode !== "dev") doRecording(properties.SHEET_ID, stats)
-  slackPost(createMessage(stats))
+
+  if (isProduction) {
+    doRecording(properties.SHEET_ID, stats)
+    slackPost(createMessage(stats))
+  } else {
+    console.log(`Here's FitnessStats. ${JSON.stringify(stats)}`)
+  }
 }
