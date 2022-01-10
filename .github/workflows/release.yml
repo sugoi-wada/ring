@@ -1,11 +1,10 @@
-name: Publish Release
+name: Publish if new version
 
 on:
   push:
     branches:
       - main
     paths:
-      - "src/**"
       - "package.json"
 
 jobs:
