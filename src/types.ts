@@ -1,6 +1,9 @@
 export type FitnessStat = {
   /** 実施日時 */
   date: string
+} & FitnessContent
+
+export type FitnessContent = {
   /** 肩書き */
   title?: string
   /** 名前 */

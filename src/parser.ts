@@ -1,11 +1,11 @@
 import { OCRFirstText } from "./lib/api/VisionClient.types"
-import { FitnessStat } from "./types"
+import { FitnessContent } from "./types"
 
 export type ParseResult = ParseSuccess | ParseError
 
 export type ParseSuccess = {
   ok: true
-  fitnessStat: Omit<FitnessStat, "date">
+  fitnessStat: FitnessContent
 }
 
 export type ParseError = {
@@ -42,7 +42,9 @@ export const parseText = (text: OCRFirstText): ParseResult => {
   const totalBurnedCalories = nextTextLines
     .slice(0, kcalUnitIndex + 1)
     .join("")
-    .match(/(?<int_part>\d{0,3})[^\d]+(?<decimal_part>\d{1,2})[^\d]*/u)?.groups
+    .match(
+      /[^\d]*(?<int_part>\d{0,3})[^\d]+(?<decimal_part>\d{1,2})[^\d]*/u
+    )?.groups
 
   // 合計走行距離を抽出（走っていないときは存在しない）
   const kmUnitIndex = nextTextLines.findIndex((l) => l.includes("km"))
@@ -51,8 +53,9 @@ export const parseText = (text: OCRFirstText): ParseResult => {
       ? nextTextLines
           .slice(kcalUnitIndex + 1, kmUnitIndex + 1)
           .join("")
-          .match(/(?<int_part>\d{0,3})[^\d]+(?<decimal_part>\d{1,2})[^\d]*/u)
-          ?.groups
+          .match(
+            /[^\d]*(?<int_part>\d{0,3})[^\d]+(?<decimal_part>\d{1,2})[^\d]*/u
+          )?.groups
       : undefined
 
   console.log(
