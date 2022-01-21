@@ -21,8 +21,8 @@
     "ts-is-present": "1.2.2"
   },
   "devDependencies": {
-    "@babel/core": "7.16.7",
-    "@babel/preset-env": "7.16.8",
+    "@babel/core": "7.16.10",
+    "@babel/preset-env": "7.16.11",
     "@babel/preset-typescript": "7.16.7",
     "@types/google-apps-script": "1.0.44",
     "@types/google-apps-script-oauth2": "38.0.0",
