@@ -27,7 +27,7 @@
     "@types/google-apps-script": "1.0.44",
     "@types/google-apps-script-oauth2": "38.0.0",
     "@types/jest": "27.4.0",
-    "@typescript-eslint/parser": "5.9.1",
+    "@typescript-eslint/parser": "5.10.0",
     "babel-jest": "27.4.6",
     "babel-loader": "8.2.3",
     "eslint": "8.7.0",
