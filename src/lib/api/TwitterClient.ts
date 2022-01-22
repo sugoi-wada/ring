@@ -68,7 +68,15 @@ class Api {
       })
       const responseCode = response.getResponseCode()
       const result = JSON.parse(response.getContentText())
-      console.log(`Response: ${responseCode}`, JSON.stringify(result))
+      if (responseCode !== 200) {
+        return {
+          errors: {
+            message: `Twitter Request failed. Response: ${responseCode} ${JSON.stringify(
+              result
+            )}`,
+          },
+        }
+      }
       return result
     } else {
       const error = service.getLastError()
