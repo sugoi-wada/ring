@@ -4,12 +4,10 @@ import {
   TwitterEmptyTimeline,
   TwitterTimeline,
   TwitterTimelineRequest,
+  TwitterTweetData,
 } from "./api/TwitterClient.types"
 
-export type TweetWithMediaUrl = Omit<
-  TwitterTimeline["data"][number],
-  "attachments"
-> & {
+export type TweetWithMediaUrl = Omit<TwitterTweetData, "attachments"> & {
   attachments: {
     media_key: string
     type: string

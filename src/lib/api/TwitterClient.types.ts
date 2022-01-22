@@ -17,6 +17,22 @@ export type TwitterTweetData = {
   attachments: {
     media_keys: string[]
   }
+  entities: {
+    urls: [
+      {
+        start: number
+        end: number
+        url: string
+        display_url: string
+        expanded_url: string
+      }
+    ]
+    hashtags: {
+      start: number
+      end: number
+      tag: string
+    }[]
+  }
 }
 
 export type TwitterTweetIncludes = {
@@ -39,8 +55,6 @@ export type TwitterTimeline = {
 }
 
 export type TwitterEmptyTimeline = {
-  data?: TwitterTweetData[]
-  includes?: TwitterTweetIncludes
   meta: {
     result_count: number
   }

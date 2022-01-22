@@ -6,6 +6,7 @@ import { createMessage } from "./message"
 import { getProperties, setProperties } from "./properties"
 import { doRecording } from "./recorder"
 import { parseTweetImages } from "./tweetImageParser"
+import { FitnessStat } from "./types"
 
 export const hello = () => {
   console.log(`Hello World！`)
@@ -31,13 +32,16 @@ export const ringFitAdventure = () => {
     tweets.map((t) => ({ id: t.id, image: { ...t.attachments[0] } }))
   )
   if (!parseResults) return
-  const stats = parseResults
+  const stats: FitnessStat[] = parseResults
     .map((parseResult) => {
       const tweet = tweets.find((t) => t.id === parseResult.sourceTweet.id)
       if (!tweet) return
       return {
         date: dayjs(tweet.created_at).format("YYYY/MM/DD HH:mm:ss"),
-        tweet,
+        source: {
+          url: `https://${tweet.entities.urls[0].display_url}`,
+          imageUrl: tweet.attachments[0].url,
+        },
         ...parseResult.fitnessStat,
       }
     })

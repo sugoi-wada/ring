@@ -8,7 +8,7 @@ import { parseText } from "./parser"
 export const parseTweetImages = (
   tweets: {
     id: TweetWithMediaUrl["id"]
-    image: Pick<TweetWithMediaUrl["attachments"][number], "type" | "url">
+    image: Omit<TweetWithMediaUrl["attachments"][number], "media_key">
   }[]
 ) => {
   const ocrResult = doOCR(tweets.map((t) => t.image.url))

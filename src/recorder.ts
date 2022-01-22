@@ -12,6 +12,7 @@ export const doRecording = (sheetId: string, stats: FitnessStat[]) => {
     formatDuration(s.totalFitnessDuration),
     s.totalBurnedCalories,
     s.totalRunnningDistance,
+    s.source.url,
   ])
   sheet
     .getRange(sheet.getLastRow() + 1, 1, values.length, values[0].length)

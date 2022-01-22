@@ -1,6 +1,8 @@
 export type FitnessStat = {
   /** 実施日時 */
   date: string
+  /** データ元 */
+  source: { url: string; imageUrl: string }
 } & FitnessContent
 
 export type FitnessContent = {

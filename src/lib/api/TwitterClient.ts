@@ -23,7 +23,7 @@ class TwitterClient {
     const query = makeQueryString({
       expansions: "attachments.media_keys",
       "media.fields": "url",
-      "tweet.fields": "created_at",
+      "tweet.fields": "entities,created_at",
       ...req.payload,
     })
 
