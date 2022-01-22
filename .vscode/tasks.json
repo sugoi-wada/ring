@@ -8,6 +8,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Build",
+      "type": "shell",
+      "command": "yarn build",
+      "problemMatcher": []
+    },
+    {
       "label": "Push",
       "type": "shell",
       "command": "yarn push",
