@@ -23,7 +23,7 @@ class TwitterClient {
     const query = makeQueryString({
       expansions: "attachments.media_keys",
       "media.fields": "url",
-      "tweet.fields": "created_at",
+      "tweet.fields": "entities,created_at",
       ...req.payload,
     })
 
@@ -68,7 +68,15 @@ class Api {
       })
       const responseCode = response.getResponseCode()
       const result = JSON.parse(response.getContentText())
-      console.log(`Response: ${responseCode}`, JSON.stringify(result))
+      if (responseCode !== 200) {
+        return {
+          errors: {
+            message: `Twitter Request failed. Response: ${responseCode} ${JSON.stringify(
+              result
+            )}`,
+          },
+        }
+      }
       return result
     } else {
       const error = service.getLastError()

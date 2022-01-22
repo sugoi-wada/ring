@@ -12,7 +12,7 @@ export type PostMessagesRequest = IncomingWebhookRequest &
       }
   )
 
-export type MessageBlock = SectionField | HeaderField
+export type MessageBlock = SectionField | HeaderField | ImageField
 
 export type SectionField = (
   | {

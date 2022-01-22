@@ -1,14 +1,13 @@
 import { isPresent } from "ts-is-present"
 import { twitterClient } from "./api/TwitterClient"
 import {
+  TwitterEmptyTimeline,
   TwitterTimeline,
   TwitterTimelineRequest,
+  TwitterTweetData,
 } from "./api/TwitterClient.types"
 
-export type TweetWithMediaUrl = Omit<
-  TwitterTimeline["data"][number],
-  "attachments"
-> & {
+export type TweetWithMediaUrl = Omit<TwitterTweetData, "attachments"> & {
   attachments: {
     media_key: string
     type: string
@@ -28,11 +27,13 @@ export const getTweetsWithMediaUrl = (
   // TODO support multiple ids
   const userId = twitterIds[0]
   const result = twitterClient.getTweets({ userId, payload: options })
-  if ("errors" in result) {
+  if ("errors" in result || !hasAnyTweets(result)) {
     return
   }
+
+  console.log(`[twitter.ts]: New tweet found. ${JSON.stringify(result)}`)
   // TODO 余計なツイートはフィルタリングして省く
-  const tweets: TweetWithMediaUrl[] = result.data?.map((d) => ({
+  const tweets: TweetWithMediaUrl[] = result.data.map((d) => ({
     ...d,
     attachments: d.attachments.media_keys
       .map((media_key) =>
@@ -41,4 +42,10 @@ export const getTweetsWithMediaUrl = (
       .filter(isPresent),
   }))
   return tweets
+}
+
+function hasAnyTweets(
+  timeline: TwitterTimeline | TwitterEmptyTimeline
+): timeline is TwitterTimeline {
+  return timeline.meta.result_count > 0
 }
