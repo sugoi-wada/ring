@@ -15,7 +15,7 @@
     "tsc": "echo 'We use \"yarn build\" instead of \"yarn tsc\"' && yarn build"
   },
   "dependencies": {
-    "core-js": "3.20.3",
+    "core-js": "3.21.1",
     "dayjs": "1.10.7",
     "regenerator-runtime": "0.13.9",
     "ts-is-present": "1.2.2"
