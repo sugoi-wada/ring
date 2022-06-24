@@ -1732,10 +1732,10 @@
   resolved "https://registry.yarnpkg.com/@types/google-apps-script/-/google-apps-script-1.0.37.tgz#97a932d579034992ca8982b0e137f1d709b77c99"
   integrity sha512-iuXrNzkMOjSfo4PBgqFqGYmgYWRzcr1Nq7L3E+nLP8jvyxXpwL5cyNpf4XjuSsFHVt/FmsEmlPeiWdrRPSkfwQ==
 
-"@types/google-apps-script@1.0.45":
-  version "1.0.45"
-  resolved "https://registry.yarnpkg.com/@types/google-apps-script/-/google-apps-script-1.0.45.tgz#b429095dd463dd91fc8df38a03690c6fcb4aebac"
-  integrity sha512-LOkwOeaoxt11splrb1REllLkRkpcwINHgsxzFHLFlwICzC8ld+UEUr8JJN4x4BVvzp7z/ZM1bDXJmD541CGzcw==
+"@types/google-apps-script@1.0.49":
+  version "1.0.49"
+  resolved "https://registry.yarnpkg.com/@types/google-apps-script/-/google-apps-script-1.0.49.tgz#592977e2c645a7e662160c1d1aac731db376521a"
+  integrity sha512-pnWMD5bHd/2aupq4x4b++Yc3KA04vG2ZimZ2aHCc5NSzoM06rup2b45xnQjsK0qYi5fQZBbjXRMZD886oekxfA==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
